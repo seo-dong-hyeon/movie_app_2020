@@ -1,42 +1,40 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import axios from 'axios';
+import Movie from './Movie';
 
-// class component -> rendor 메소드 구현
-// state -> object -> component의 date -> 가변적
+
 class App extends React.Component{
   state = {
-    count: 0
+    isLoading: true,
+    movies: []
   };
-  add = () => {
-    this.setState({count: this.state.count + 1}); // setState -> 새로운 state refresh -> rendor 호출
-    //this.setState(current => ({count: current.count + 1})); 의존x
-  };
-  sub = () => {
-    this.setState({count: this.state.count - 1}); // setState -> 새로운 state refresh -> rendor 호출
-    //this.setState(current => ({count: current.count - 1}));
-  };
-
-  /* life cycle */
-  constructor(props){ // Javascript
-    super(props)
-    console.log("constructor");
+  // 비동기 처리 -> await 작업이 끝날때까지 기다려
+  getMovies = async () =>{
+    //const movies = await axios.get("https://yts.mx/api/v2/list_movies.json"); movies.data.data.movies
+    const {data : {data: {movies}}} = await axios.get("https://yts.mx/api/v2/list_movies.json?sort_by=rating");
+    this.setState({movies, isLoading: false}); // movies: movies
   }
   componentDidMount(){
-    console.log("component did mount");
-  }
-  componentDidUpdate(){
-    console.log("component did update");
-  }
-
+    /*setTimeout(() =>{
+      this.setState({isLoading: false});
+    },6000)*/
+    this.getMovies();
+  };
+  
   render(){
-    console.log("rendering");
-    return (
-      <div>
-        <h1>The number is {this.state.count}</h1>
-        <button onClick={this.add}>Add</button>
-        <button onClick={this.sub}>Sub</button>
-      </div>
-    )
+    const {isLoading, movies} = this.state;
+    return <div>{isLoading ? "Loading..." : movies.map(movie => {
+      return (
+        <Movie
+          key={movie.id}
+          id={movie.id}
+          year={movie.year}
+          title={movie.title}
+          summary={movie.summary}
+          poster={movie.medium_cover_image}   
+        />
+      )
+    })}</div>
   }
 }
 
