@@ -16,6 +16,7 @@ class App extends React.Component{
     //this.setState(current => ({count: current.count - 1}));
   };
 
+  /* life cycle */
   constructor(props){ // Javascript
     super(props)
     console.log("constructor");
