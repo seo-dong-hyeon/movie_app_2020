@@ -1,52 +1,20 @@
 import React from 'react';
-import axios from 'axios';
-import Movie from './Movie';
-import './App.css'
+import {HashRouter, Route} from 'react-router-dom';
+import About from './routes/About';
+import Home from './routes/Home';
 
 
-class App extends React.Component{
-  state = {
-    isLoading: true,
-    movies: []
-  };
-
-  getMovies = async () => {
-    const {data : {data: {movies}}} = await axios.get("https://yts.mx/api/v2/list_movies.json?sort_by=rating");
-    this.setState({movies, isLoading: false}); 
-  }
-  
-  componentDidMount() {
-    this.getMovies();
-  };
-
-  render() {
-    const {isLoading, movies} = this.state;
-    return (
-      <section className="container">
-        {isLoading 
-          ? <div className="loader">
-              <span className="loader__text">
-                Loading...
-              </span>
-            </div>
-          : <div className="movies">
-              {movies.map(movie => {  
-                return (            
-                  <Movie
-                    key={movie.id}
-                    id={movie.id}
-                    year={movie.year}
-                    title={movie.title}
-                    summary={movie.summary}
-                    poster={movie.medium_cover_image}   
-                    genres={movie.genres}
-                  />
-                )
-              })}
-            </div>
-        }
-      </section>)  
-  }
+function App() {
+  // Route -> 랜더링할 스크린 주소, 해야할 일
+  /* 해당되는 모든 url을 가져옴 
+     http://localhost:3000/movie_app_2020#/about -> "/" -> Home 호출
+                                                 -> "about" -> About 호출
+  */
+  // exact={true} -> 정확하게 일치하는 url만 렌더링
+  return <HashRouter> 
+    <Route path="/" exact={true} component={Home} />
+    <Route path="/about" component={About} />
+  </HashRouter>
 }
 
 export default App;
