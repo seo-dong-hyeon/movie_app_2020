@@ -1,7 +1,8 @@
 import React from "react";
 import "./About.css";
 
-function About() {
+// react router -> 자동으로 props 전달
+function About(props) {
     return (
         <div className="about__container">
           <span>
